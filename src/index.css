@@ -1,0 +1,84 @@
+/* Tailwind v4 entry */
+@import "tailwindcss";
+
+:root {
+  --color-primary: #08349C; /* BRAND ORANGE */
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-text: #111827; /* slate-900 */
+  --color-muted: #6b7280; /* slate-500 */
+  --color-dark: #0b1220; /* deep slate/navy for footer */
+}
+
+html, body, #root { height: 100%; }
+body { margin: 0; font-family: system-ui, sans-serif; background: var(--color-bg); color: var(--color-text); }
+
+
+/* --- subtle section backgrounds --- */
+.section-split {
+  background:
+    linear-gradient(180deg, rgba(246,147,33,0.04), rgba(255,255,255,0) 24%),
+    radial-gradient(1200px 600px at 100% -100px, rgba(246,147,33,0.06), transparent 60%),
+    radial-gradient(800px 400px at -10% 120%, rgba(17,24,39,0.06), transparent 60%);
+}
+
+.bg-grid-slate {
+  background-image: radial-gradient(rgba(17,24,39,0.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+/* faint border lines for rows/tiles */
+.divider-faint {
+  background: linear-gradient(to right, transparent, rgba(17,24,39,0.08), transparent);
+}
+
+/* card top accent bar */
+.card-accent:before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+  background: var(--color-primary);
+  opacity: .85;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
+/* soft shadow lift */
+.lift {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.lift:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 20px rgba(17,24,39,0.06),
+    0 4px 8px rgba(17,24,39,0.04);
+}
+
+
+/* --- Mission section textures --- */
+.mission-wrap {
+  background:
+    linear-gradient(180deg, rgba(17, 24, 39, 0.25), transparent 28%),
+    radial-gradient(900px 500px at 120% -120px, rgba(246, 147, 33, 0.06), transparent 60%);
+}
+.bg-grid-faint {
+  background-image: radial-gradient(rgba(17,24,39,.06) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+.angle-mask {
+  /* top-right clipped edge without extra markup */
+  -webkit-mask: linear-gradient(165deg, #000 78%, transparent 78.1%);
+          mask: linear-gradient(165deg, #000 78%, transparent 78.1%);
+}
+
+/* stat & divider niceties */
+.stat {
+  display: grid;
+  gap: .25rem;
+}
+.stat .kpi {
+  font-variation-settings: "wght" 780;
+}
+.hr-soft { height: 1px; background: linear-gradient(to right, transparent, rgba(17,24,39,.12), transparent); }
+.badge-chip { background: rgba(0,0,0,.06); color: rgba(0,0,0,.65); }
