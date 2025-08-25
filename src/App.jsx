@@ -1,16 +1,28 @@
-// src/App.jsx
-import { Routes, Route } from "react-router-dom"
-import Layout from "./components/Layout"
-import VolunteerMaterialsMockupTemplated from "./VolunteerMaterialsMockupTemplated"
-import Quote from "./pages/Quote"   // your quote page
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+
+import VolunteerMaterialsMockupTemplated from "./VolunteerMaterialsMockupTemplated.jsx";
+import Admin from "./admin/Admin.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export default function App() {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<VolunteerMaterialsMockupTemplated />} />
-        <Route path="/quote" element={<Quote />} />
-      </Route>
+      {/* Public site */}
+      <Route path="/" element={<VolunteerMaterialsMockupTemplated />} />
+
+      {/* Admin (protected) */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <Admin />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* 404 */}
+      <Route path="*" element={<div className="p-8">Not found</div>} />
     </Routes>
-  )
+  );
 }

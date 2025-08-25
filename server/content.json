@@ -1,0 +1,32 @@
+{
+  "theme": {
+    "primary": "#0d1be3"
+  },
+  "hero": {
+    "headline": "Building Tennessee’s Future",
+    "subhead": "Family-owned quarry & materials supplier trusted by builders, paving crews, and concrete projects across Tennessee since 2007.",
+    "video": "/hero-video.mp4"
+  },
+  "products": [
+    {
+      "title": "Road Construction and Paving",
+      "desc": "Premium aggregates for all jobs.",
+      "image": "/uploads/vsag-newspaper-ad-1756127859884.png"
+    },
+    {
+      "title": "Construction Aggregates",
+      "desc": "Industrial and construction grade.",
+      "image": "/materials.jpg"
+    },
+    {
+      "title": "Asphalt",
+      "desc": "Durable asphalt for long-lasting roads.",
+      "image": "/paving.jpg"
+    },
+    {
+      "title": "Ready Mix Concrete",
+      "desc": "Ready-mix concrete that performs.",
+      "image": "/concrete.jpg"
+    }
+  ]
+}
