@@ -1,0 +1,7 @@
+# env files
+.env
+*.env
+**/.env
+.env.*        # e.g., .env.development
+**/.env.*     # nested envs
+server/.env

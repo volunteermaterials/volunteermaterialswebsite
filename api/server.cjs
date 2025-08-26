@@ -1,10 +1,7 @@
 // server.cjs
 // Express API with Auth0 verification, robust logging, and uploads.
 //
-// Required env:
-//   AUTH0_ISSUER_BASE_URL = https://<tenant>.us.auth0.com/   // trailing slash optional
-//   AUTH0_AUDIENCE        = https://volunteer-materials.api  // must match API Identifier
-//   API_PORT              = 8787                             // optional
+
 
 const path = require("path");
 const fs = require("fs");
