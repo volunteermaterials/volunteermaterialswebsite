@@ -1,0 +1,8 @@
+# netlify.toml
+[build.environment]
+NODE_VERSION = "22"
+NPM_VERSION  = "10"
+
+[build]
+# Optional: verify versions in logs, then build
+command = "node -v && npm -v && npm ci && npm run build"
