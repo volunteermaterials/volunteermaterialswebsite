@@ -1,6 +1,6 @@
 {
   "theme": {
-    "primary": "#0d1be3"
+    "primary": "#f6691e"
   },
   "hero": {
     "headline": "Building Tennessee’s Future",
@@ -27,6 +27,173 @@
       "title": "Ready Mix Concrete",
       "desc": "Ready-mix concrete that performs.",
       "image": "/concrete.jpg"
+    }
+  ],
+  "locations": [
+    {
+      "id": "pottsville-quarry",
+      "name": "Pottsville Quarry",
+      "kind": "quarry",
+      "established": "2007-07-02",
+      "address1": "750 Highway 99",
+      "city": "Lewisburg",
+      "state": "TN",
+      "zip": "37091",
+      "phone": "931-364-2655",
+      "fax": "931-364-4115",
+      "lat": "35.62263741432329",
+      "lng": " -86.80321341413122",
+      "active": true,
+      "address2": ""
+    },
+    {
+      "id": "vpav-pottsville-plant",
+      "name": "VPAV Pottsville Plant",
+      "kind": "plant",
+      "established": "2015-10-27",
+      "address1": "770 Highway 99",
+      "city": "Lewisburg",
+      "state": "TN",
+      "zip": "37091",
+      "phone": "931-364-4900",
+      "fax": "",
+      "lat": "35.61581919070739",
+      "lng": "-86.79374868720639",
+      "active": true,
+      "address2": ""
+    },
+    {
+      "id": "vpav-holladay-plant",
+      "name": "VPAV - Holladay Plant",
+      "kind": "plant",
+      "established": "2024",
+      "address1": "14106 Highway 641 S",
+      "city": "Holladay",
+      "state": "TN",
+      "zip": "38341",
+      "phone": "",
+      "fax": "",
+      "lat": "35.855686495392334",
+      "lng": " -88.08455386377096",
+      "active": true,
+      "address2": ""
+    },
+    {
+      "id": "concrete-lewisburg",
+      "name": "Concrete",
+      "kind": "concrete",
+      "established": "2016-12-12",
+      "address1": "770 Highway 99",
+      "city": "Lewisburg",
+      "state": "TN",
+      "zip": "37091",
+      "phone": "931-364-5900",
+      "fax": "",
+      "lat": "35.617209200254166",
+      "lng": "-86.7950424130249",
+      "active": true,
+      "address2": ""
+    },
+    {
+      "id": "paving-hq",
+      "name": "Paving HQ",
+      "kind": "paving_hq",
+      "established": "2015-10-27",
+      "address1": "870 Highway 99",
+      "city": "Lewisburg",
+      "state": "TN",
+      "zip": "37091",
+      "phone": "931-364-6900",
+      "fax": "",
+      "lat": "35.61581919070739",
+      "lng": "-86.79374868720639",
+      "active": true,
+      "address2": ""
+    },
+    {
+      "id": "sand-gravel-hurricane-mills",
+      "name": "Sand & Gravel",
+      "kind": "sand_gravel",
+      "established": "2019-08-05",
+      "address1": "25 Burned House Rd",
+      "city": "Hurricane Mills",
+      "state": "TN",
+      "zip": "37078",
+      "phone": "931-264-5047",
+      "fax": "",
+      "lat": "35.938582462635615",
+      "lng": "-87.76489945763929",
+      "active": true,
+      "address2": ""
+    },
+    {
+      "id": "shelbyville-yard",
+      "name": "Shelbyville",
+      "kind": "quarry",
+      "established": "2024-02-07",
+      "address1": "196 L. Fisher Rd",
+      "city": "Shelbyville",
+      "state": "TN",
+      "zip": "37180",
+      "phone": "931-422-1491",
+      "fax": "",
+      "lat": "35.49896993723822",
+      "lng": "-86.41622995589232",
+      "active": true,
+      "address2": ""
+    },
+    {
+      "id": "drakes-creek-stone",
+      "name": "Drakes Creek Stone",
+      "kind": "quarry",
+      "established": "2024-10-01",
+      "address1": "863 Gold City Rd.",
+      "city": "Franklin",
+      "state": "KY",
+      "zip": "42134",
+      "phone": "",
+      "fax": "",
+      "lat": "36.73485786852404",
+      "lng": "-86.53884865337409",
+      "active": true,
+      "address2": ""
+    },
+    {
+      "id": "corporate-hq",
+      "name": "Corporate HQ",
+      "kind": "Corporate HQ",
+      "established": "",
+      "address1": "750 Highway 99",
+      "city": "Lewisburg",
+      "state": "TN",
+      "zip": "37091",
+      "phone": "615-435-3314",
+      "fax": "931-364-4115",
+      "lat": "35.622454269830556",
+      "lng": "-86.80310612577587",
+      "active": true,
+      "address2": ""
+    }
+  ],
+  "calculators": {
+    "aggregates": {
+      "defaultWastePct": null
+    },
+    "concrete": {
+      "defaultWastePct": null
+    }
+  },
+  "materials": [
+    {
+      "id": "495f0473-5976-436c-ae45-e1f1a95b7c7a",
+      "name": "#57 Gravel",
+      "category": "aggregate",
+      "code": "35",
+      "densityTonsPerCY": 97,
+      "densityLbPerFt3": 120,
+      "notes": "",
+      "active": true,
+      "volumeCYPerTon": 120
     }
   ]
 }

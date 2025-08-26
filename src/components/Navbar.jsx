@@ -1,6 +1,5 @@
-// src/components/Navbar.jsx
-import { Button } from "../components/ui/button"
-import { Link } from "react-router-dom"
+import { Button } from "../components/ui/button";
+import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
@@ -18,9 +17,10 @@ export default function Navbar() {
           <a href="/#process"   className="hover:text-[var(--color-primary)]">Process</a>
           <a href="/#faq"       className="hover:text-[var(--color-primary)]">FAQ</a>
           <a href="/#contact"   className="hover:text-[var(--color-primary)]">Contact</a>
+          <Link to="/calculators" className="hover:text-[var(--color-primary)]">Calculators</Link>
         </nav>
 
-        {/* Use a Link wrapper so it always navigates */}
+        {/* Button routes to the /quote route that renders src/pages/Quote.jsx */}
         <Link to="/quote">
           <Button className="hidden md:inline-flex rounded-full px-5 py-2 shadow-sm">
             Get a Quote

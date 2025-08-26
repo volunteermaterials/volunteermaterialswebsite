@@ -6,6 +6,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import "./index.css";
 import App from "./App.jsx";
 import { ContentProvider } from "./content/ContentContext.jsx";
+import "leaflet/dist/leaflet.css";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>

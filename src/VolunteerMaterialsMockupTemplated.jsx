@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -10,15 +10,40 @@ import {
   Timer,
   Handshake,
   Shield,
-  ChevronRight,
-  CheckCircle2,
-  ExternalLink,
-  PlayCircle,
 } from "lucide-react";
 
+import Navbar from "./components/Navbar.jsx";
 import { Button } from "./components/ui/button";
 import { Card, CardContent } from "./components/ui/card";
 import { useContent } from "./content/ContentContext.jsx";
+
+// ---- Leaflet (overview map in CTA) ----
+import L from "leaflet";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+
+// Default marker icon via CDN (avoids local asset path issues)
+const defaultIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -30],
+  shadowSize: [41, 41],
+});
+const centerTN = [35.8601, -86.6602];
+
+// Fit map to all points
+function FitBoundsOnData({ points }) {
+  const map = useMap();
+  useEffect(() => {
+    const withCoords = points.filter((p) => p.lat && p.lng);
+    if (!withCoords.length) return;
+    const bounds = L.latLngBounds(withCoords.map((p) => [p.lat, p.lng]));
+    map.fitBounds(bounds.pad(0.2));
+  }, [points, map]);
+  return null;
+}
 
 // ------------------------------
 // Utilities
@@ -72,6 +97,14 @@ const DEFAULTS = {
       image: "/concrete.jpg",
     },
   ],
+  // Parent company defaults (overridable via content)
+  parentCompany: {
+    show: true,
+    sectionTitle: "An Armada Materials Company", // exact text as requested
+    name: "Armada Materials",
+    url: "https://www.armadamaterials.com",
+    logo: "/armada-logo.png", // place real file in /public or set via content
+  },
 };
 
 // ------------------------------
@@ -114,7 +147,7 @@ const Hero = ({ hero }) => {
                 Call Now (931) 364-2655
               </Button>
             </a>
-            <Link to="/contact">
+            <Link to="/quote">
               <Button
                 variant="outline"
                 className="px-8 py-4 text-lg rounded-full border-white text-white hover:bg-white hover:text-black"
@@ -169,7 +202,7 @@ const PartnerBadges = () => (
       </div>
       <div className="flex items-center gap-6 opacity-80">
         {["/dot-logo.png", "/contractors-assoc.png", "/safety-cert.png"].map((l, i) => (
-          <img key={i} src={l} className="h-8" alt="Certification logo" />
+          <img key={i} src={l} className="h-8" alt="Certification logo" loading="lazy" />
         ))}
       </div>
     </div>
@@ -189,7 +222,7 @@ const ProductsGrid = ({ products }) => {
       <div className="relative max-w-7xl mx-auto">
         <div className="text-center mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-black/5 text-black/60">
-            OUR PRODUCTS
+            OUR SERVICES
           </div>
           <h2 className="mt-4 text-5xl font-bold">What We Offer</h2>
           <p className="mt-3 text-[var(--color-muted)] max-w-2xl mx-auto">
@@ -209,7 +242,7 @@ const ProductsGrid = ({ products }) => {
                 className="relative rounded-2xl overflow-hidden border border-black/[.06] bg-[var(--color-surface)] lift"
               >
                 <div className="relative h-44">
-                  <img src={img} alt={title} className="w-full h-full object-cover" />
+                  <img src={img} alt={title} className="w-full h-full object-cover" loading="lazy" />
                   <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/20 to-transparent" />
                 </div>
 
@@ -335,6 +368,7 @@ const Mission = () => (
             src="/about-us.jpg"
             alt="Volunteer Materials team at site"
             className="w-full h-[460px] object-cover"
+            loading="lazy"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
         </div>
@@ -443,6 +477,7 @@ const Testimonials = () => (
         src="/testimonial.jpg"
         alt="Customer testimonial"
         className="rounded-3xl shadow-lg object-cover"
+        loading="lazy"
       />
       <div>
         <h2 className="text-4xl font-bold mb-8">Testimonials</h2>
@@ -556,9 +591,44 @@ const FAQ = () => {
 };
 
 // ------------------------------
-// Section: Locations CTA
+// Map preview for CTA (overview only)
 // ------------------------------
-const LocationsCTA = () => (
+function LocationsOverviewMap({ locations = [] }) {
+  const points = useMemo(
+    () => locations.filter((l) => l.lat && l.lng),
+    [locations]
+  );
+
+  return (
+    <div className="rounded-3xl shadow-lg overflow-hidden border border-white/20">
+      <MapContainer
+        center={centerTN}
+        zoom={7}
+        scrollWheelZoom={false}
+        zoomControl={false}               // avoid needing Leaflet CSS for controls
+        className="h-[320px] md:h-[360px] w-full"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        />
+        <FitBoundsOnData points={points} />
+        {points.map((loc) => (
+          <Marker
+            key={loc.id || `${loc.name}-${loc.lat}-${loc.lng}`}
+            position={[loc.lat, loc.lng]}
+            icon={defaultIcon}
+          />
+        ))}
+      </MapContainer>
+    </div>
+  );
+}
+
+// ------------------------------
+// Section: Locations CTA (now shows Leaflet map)
+// ------------------------------
+const LocationsCTA = ({ locations }) => (
   <section
     id="locations"
     className="py-24 px-6 text-white bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary)]/90"
@@ -576,77 +646,140 @@ const LocationsCTA = () => (
           </Button>
         </Link>
       </div>
-      <img src="/locations.jpg" alt="Locations map" className="rounded-3xl shadow-lg object-cover" />
+
+      {/* Replaced the image with a live Leaflet overview map */}
+      <LocationsOverviewMap locations={locations} />
     </div>
   </section>
 );
 
 // ------------------------------
-// Section: Footer
+// Section: Footer (Armada block directly under Certifications)
 // ------------------------------
-const Footer = () => (
-  <footer id="contact" className="py-20 px-6" style={{ background: "var(--color-dark)" }}>
-    <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 text-gray-300">
-      <div>
-        <img src="/logo.png" alt="Volunteer Materials" className="h-18 mb-6" />
-        <p>
-          Helping Tennessee build stronger communities with ready-to-use materials, quality
-          resources, and reliable service since 2007.
-        </p>
-      </div>
-      <div>
-        <h4 className="font-semibold text-white mb-4">Quick Links</h4>
-        <ul className="space-y-2">
-          <li>
-            <a href="#materials" className="hover:text-white">
-              Materials
-            </a>
-          </li>
-          <li>
-            <a href="#why" className="hover:text-white">
-              Why Us
-            </a>
-          </li>
-          <li>
-            <a href="#process" className="hover:text-white">
-              Process
-            </a>
-          </li>
-          <li>
-            <a href="#faq" className="hover:text-white">
-              FAQ
-            </a>
-          </li>
-          <li>Job Application</li>
-        </ul>
-      </div>
-      <div>
-        <h4 className="font-semibold text-white mb-4">Contact</h4>
-        <ul className="space-y-2">
-          <li className="flex items-center gap-2">
-            <MapPin size={18} /> 750 Highway 99, Lewisburg, TN
-          </li>
-          <li className="flex items-center gap-2">
-            <Phone size={18} /> (931) 364-2655
-          </li>
-          <li className="flex items-center gap-2">
-            <Mail size={18} /> info@volunteermaterials.com
-          </li>
-        </ul>
-      </div>
-      <div>
-        <h4 className="font-semibold text-white mb-4">Certifications</h4>
-        <div className="flex gap-4">
-          <img src="/dot-logo.png" alt="DOT certification" className="h-10" />
-          <img src="/contractors-assoc.png" alt="Contractors association" className="h-10" />
+const Footer = ({ parent }) => {
+  const parentEnabled = parent?.show !== false && (parent?.logo || parent?.name);
+  const parentLogo = ensureUrl(parent?.logo);
+  const parentUrl = parent?.url || "https://www.armadamaterials.com";
+  const parentName = parent?.name || "Armada Materials";
+  const sectionTitle = "An Armada Materials Company"; // exact title only
+
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Volunteer Materials",
+    url: typeof window !== "undefined" ? window.location.origin : undefined,
+    parentOrganization: {
+      "@type": "Organization",
+      name: parentName,
+      url: parentUrl,
+    },
+  };
+
+  return (
+    <footer id="contact" className="pt-8 px-6" style={{ background: "var(--color-dark)" }}>
+      {/* Main footer grid */}
+      <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 text-gray-300">
+        <div>
+          <img src="/logo.png" alt="Volunteer Materials" className="h-18 mb-6" />
+          <p>
+            Helping Tennessee build stronger communities with ready-to-use materials, quality
+            resources, and reliable service since 2007.
+          </p>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-white mb-4">Quick Links</h4>
+          <ul className="space-y-2">
+            <li>
+              <a href="#materials" className="hover:text-white">
+                Materials
+              </a>
+            </li>
+            <li>
+              <a href="#why" className="hover:text-white">
+                Why Us
+              </a>
+            </li>
+            <li>
+              <a href="#process" className="hover:text-white">
+                Process
+              </a>
+            </li>
+            <li>
+              <a href="#faq" className="hover:text-white">
+                FAQ
+              </a>
+            </li>
+            <li>
+              <Link to="/careers" className="hover:text-white">
+                Careers
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="font-semibold text-white mb-4">Contact</h4>
+          <ul className="space-y-2">
+            <li className="flex items-center gap-2">
+              <MapPin size={18} /> 750 Highway 99, Lewisburg, TN
+            </li>
+            <li className="flex items-center gap-2">
+              <Phone size={18} /> (931) 364-2655
+            </li>
+            <li className="flex items-center gap-2">
+              <Mail size={18} /> info@volunteermaterials.com
+            </li>
+          </ul>
+        </div>
+
+        {/* Certifications column */}
+        <div>
+          <h4 className="font-semibold text-white mb-4">Certifications</h4>
+          <div className="flex flex-wrap items-center gap-4">
+            <img src="/dot-logo.png" alt="DOT certification" className="h-10" loading="lazy" />
+            <img src="/contractors-assoc.png" alt="Contractors association" className="h-10" loading="lazy" />
+          </div>
+
+          {/* Armada block: directly under Certifications */}
+          {parentEnabled && (
+            <div className="mt-8 pt-6 border-t border-white/10">
+              <div className="text-white font-semibold mb-3">{sectionTitle}</div>
+              <a
+                href={parentUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 hover:opacity-90"
+                aria-label={`${parentName} website`}
+                title={parentName}
+              >
+                {parentLogo ? (
+                  <img
+                    src={parentLogo}
+                    alt={`${parentName} logo`}
+                    className="h-8 object-contain"
+                    loading="lazy"
+                    width="160"
+                    height="32"
+                  />
+                ) : (
+                  <span className="font-semibold underline text-gray-200">{parentName}</span>
+                )}
+              </a>
+            </div>
+          )}
         </div>
       </div>
-    </div>
-    <div className="text-center text-gray-400 mt-12 border-t border-white/10 pt-8">
-      © {new Date().getFullYear()} Volunteer Materials. All rights reserved.
-    </div>
-  </footer>
-);
+
+      <div className="text-center text-gray-400 mt-12 border-t border-white/10 pt-8 pb-10">
+        © {new Date().getFullYear()} Volunteer Materials. All rights reserved.
+      </div>
+
+      {/* Minimal JSON-LD to reflect parent relationship */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
+    </footer>
+  );
+};
 
 // ------------------------------
 // Main Page Component
@@ -658,6 +791,8 @@ export default function VolunteerMaterialsMockupTemplated() {
   const primary = content?.theme?.primary ?? DEFAULTS.theme.primary;
   const hero = content?.hero ?? DEFAULTS.hero;
   const products = content?.products ?? DEFAULTS.products;
+  const parentCompany = content?.parentCompany ?? DEFAULTS.parentCompany;
+  const locations = content?.locations ?? []; // <-- pass to CTA map
 
   // Sync CSS variable with content theme
   useEffect(() => {
@@ -689,7 +824,10 @@ export default function VolunteerMaterialsMockupTemplated() {
           --color-text: #111827;
           --color-muted: #6b7280;
           --color-dark: #797a7cff;
+          --nav-height: 72px;
         }
+        /* Make anchor jumps land below a fixed/sticky navbar */
+        section[id] { scroll-margin-top: calc(var(--nav-height) + 8px); }
         .bg-grid-slate {
           background:
             linear-gradient(transparent 23px, rgba(0,0,0,0.04) 24px),
@@ -710,6 +848,9 @@ export default function VolunteerMaterialsMockupTemplated() {
         .angle-mask::after { content:""; position:absolute; inset:0; mask: linear-gradient(180deg, black 80%, transparent); }
       `}</style>
 
+      {/* NAVBAR */}
+      <Navbar />
+
       <Hero hero={hero} />
       <PartnerBadges />
       <ProductsGrid products={products} />
@@ -719,14 +860,16 @@ export default function VolunteerMaterialsMockupTemplated() {
       <CreditCTA />
       <Process />
       <FAQ />
-      <LocationsCTA />
-      <Footer />
+      {/* Pass locations into CTA to render overview map */}
+      <LocationsCTA locations={locations} />
+      <Footer parent={parentCompany} />
     </div>
   );
 
   if (error) {
     return (
       <div className="min-h-screen flex flex-col">
+        <Navbar />
         <div className="p-4 bg-red-50 text-red-700 border-b border-red-200">
           Failed to load content. Showing defaults.
         </div>
@@ -738,6 +881,7 @@ export default function VolunteerMaterialsMockupTemplated() {
   if (loading) {
     return (
       <div className="min-h-screen">
+        <Navbar />
         <section className="relative h-[60vh] bg-black/5">
           <div className="absolute inset-0">
             <Shimmer className="w-full h-full" />
