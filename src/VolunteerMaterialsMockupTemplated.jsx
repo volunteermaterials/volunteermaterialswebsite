@@ -866,7 +866,7 @@ export default function VolunteerMaterialsMockupTemplated() {
     </div>
   );
 
-  if (error) {
+  /* if (error) {
     return (
       <div className="min-h-screen flex flex-col">
         <Navbar />
@@ -875,8 +875,8 @@ export default function VolunteerMaterialsMockupTemplated() {
         </div>
         {page}
       </div>
-    );
-  }
+    );*/
+  
 
   if (loading) {
     return (

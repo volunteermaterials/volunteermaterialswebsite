@@ -5,3 +5,4 @@
 .env.*        # e.g., .env.development
 **/.env.*     # nested envs
 server/.env
+node_modules/
