@@ -15,6 +15,6 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
-    allowedHostsL: ['.netlify.app']
+    allowedHosts: ['.netlify.app']
   },
 })
